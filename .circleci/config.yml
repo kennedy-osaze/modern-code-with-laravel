@@ -1,0 +1,84 @@
+# use CircleCI 2.0
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.3.7-apache-node-browsers
+
+    # A set of executable commands
+    steps:
+      # Special step to check out source code to working directory
+      - checkout
+
+      - run:
+          name: Install system dependencies
+          command: |
+            sudo apt update
+            sudo apt-get install -y zlib1g-dev libsqlite3-dev
+
+      - run:
+          name: Install PHP extensions
+          command: |
+            sudo docker-php-ext-install zip pdo
+            sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath
+
+      # Composer cache
+      # Restore the dependency cache if `composer.json` does not change
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Install Composer
+          command: composer install -n --prefer-dist
+
+      # Save the dependency cache with the `composer.json` or `composer.lock` (if present) cache key template
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+
+      # Node cache
+      # Restore the dependency cache if `package.json` does not change
+      - restore_cache:
+          keys:
+            # "package-lock.json" can be used if it is committed to the repo
+            - node-v1-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - node-v1-
+
+      - run:
+          name: Install Node dependencies
+          command: npm install
+
+      # Save the dependency cache with the `package.json` or `package-lock.json` (if present) cache key template
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Create SQLite database
+          command: touch storage/testing.sqlite
+
+      - run:
+          name: Run database migrations
+          command: php artisan migrate --env=testing --database=sqlite_testing --force
+
+      - run:
+          name: Run unit tests
+          command: ./vendor/bin/phpunit --testsuite Unit
+
+      - run:
+          name: Run feature tests
+          command: ./vendor/bin/phpunit --testsuite Feature
+
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: ./storage/logs
+          destination: laravel
