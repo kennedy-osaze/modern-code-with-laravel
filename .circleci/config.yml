@@ -87,11 +87,12 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            mkdir -p /phpunit-logs &&
-            php -dzend_extension=xdebug.so vendor/bin/phpunit --coverage-clover=phpunit-logs/coverage-clover.xml --coverage-html=phpunit-logs/coverage
+            mkdir -p ./logs/phpunit
+            vendor/bin/phpunit -d memory_limit=512M --debug --log-junit logs/phpunit/junit.xml --testdox-html logs/phpunit/testdox.html
 
-      - store_test_results:
-          path: /phpunit-logs
+      - store_artifacts:
+          path: ./logs/phpunit
+          destination: phpunit
 
       - store_artifacts:
           path: ./storage/logs
