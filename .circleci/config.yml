@@ -85,15 +85,13 @@ jobs:
           command: php artisan migrate:refresh --seed
 
       - run:
-          name: Run unit tests
-          command: ./vendor/bin/phpunit --testsuite Unit
-
-      - run:
-          name: Run feature tests
-          command: ./vendor/bin/phpunit --testsuite Feature
+          name: Run Tests
+          command: |
+            mkdir -p /phpunit-logs &&
+            php -dzend_extension=xdebug.so vendor/bin/phpunit --coverage-clover=phpunit-logs/coverage-clover.xml --coverage-html=phpunit-logs/coverage
 
       - store_test_results:
-          path: tests/_output
+          path: /phpunit-logs
 
       - store_artifacts:
           path: ./storage/logs
