@@ -37,7 +37,7 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: Install Composer
+          name: Install composer dependencies
           command: composer install -n --prefer-dist
 
       # Save the dependency cache with the `composer.json` or `composer.lock` (if present) cache key template
@@ -75,7 +75,7 @@ jobs:
 
       - run:
           name: Run unit tests
-          command: ./vendor/bin/phpunit --testsuite Unit
+          command: ./vendor/bin/phpunit --testsuite Unit  
 
       - run:
           name: Run feature tests
