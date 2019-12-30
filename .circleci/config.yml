@@ -82,7 +82,7 @@ jobs:
           command: ./vendor/bin/phpunit --testsuite Feature
 
       - store_test_results:
-          path: test-results
+          path: tests/_output
 
       - store_artifacts:
           path: ./storage/logs
