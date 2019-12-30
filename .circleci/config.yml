@@ -5,6 +5,11 @@ jobs:
     docker:
       - image: circleci/php:7.3.7-apache-node-browsers
 
+    filters:
+        branches:
+            ignore:
+              - master
+
     # A set of executable commands
     steps:
       # Special step to check out source code to working directory
