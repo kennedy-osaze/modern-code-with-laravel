@@ -59,6 +59,22 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "cs-fix-and-sniff": [
+            "@cs-fix",
+            "@cs-check"
+        ],
+        "cs-fix": [
+            "@cs-fixer-fix",
+            "@cs-sniff-fix"
+        ],
+        "cs-check": [
+            "@cs-fixer-check",
+            "@cs-sniff-check"
+        ],
+        "cs-sniff-check": "vendor/bin/phpcs .",
+        "cs-sniff-fix": "vendor/bin/phpcbf .",
+        "cs-fixer-check": "vendor/bin/php-cs-fixer fix --dry-run",
+        "cs-fixer-fix": "vendor/bin/php-cs-fixer fix --verbose --show-progress=estimating --diff"
     }
 }
