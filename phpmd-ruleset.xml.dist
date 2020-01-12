@@ -9,7 +9,9 @@
         A well crafted set of custom rules for checking code smells in Laravel Projects using http://phpmd.org/documentation/creating-a-ruleset.html
     </description>
 
-    <rule ref="rulesets/unusedcode.xml"/>
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter"/>
+    </rule>
 
     <rule ref="rulesets/controversial.xml"/>
 
@@ -57,7 +59,7 @@
 
         <properties>
             <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
-            <property name="exceptions" value="id,fn,ch,a,b,q,w,i,n,j,v,e,f,fp"/>
+            <property name="exceptions" value="id,fn,ch,a,b,q,w,i,n,j,k,v,e,f,fp"/>
         </properties>
     </rule>
 
